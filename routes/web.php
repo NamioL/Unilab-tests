@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Products;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +30,10 @@ Route::get('/other', function() {
 });
 Route::get('/404', function() {
     return abort(404);
+});
+
+
+Route::prefix('/products')->group(function(){
+    Route::get('/', [Products::class, 'index'])->name('test');
+    Route::get('/{id}', [Products::class, 'show']);
 });
