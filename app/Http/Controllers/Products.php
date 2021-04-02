@@ -2,58 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Product;
 
 class Products extends Controller
 {
-    
-    protected static $all_products;
-    
-    function __construct()
-    {
-      self::$all_products = $this->all_products()['products'];  
-    }
-    private function all_products() 
-    {
-        $newsMassive = [
-            'products' => [
-            '1' => [
-            'title'=>'orange',
-            'image_url' =>'https://i.pinimg.com/originals/72/f6/fe/72f6fe384180442d9cd835abd4e021d9.jpg',
-            ],
-            '2' => [
-            'title'=>'apple',
-            'image_url'=>
-            'https://i.pinimg.com/originals/72/f6/fe/72f6fe384180442d9cd835abd4e021d9.jpg',
-            ],
-            '3' => [
-            'title'=>'banana',
-            'image_url'=>
-            'https://i.pinimg.com/originals/72/f6/fe/72f6fe384180442d9cd835abd4e021d9.jpg',
-            ]
-            ]
-            
-            ];
-            return $newsMassive;
-    }
     protected function find($id) 
     {
-            return self::$all_products[$id];
+            return Product::where('id', $id)->firstOrFail();
     }
+
     protected function index() 
     {
-        return view('products.index', [ 'all_posts' => self::$all_products]);
+        return view('products.index', [ 'all_posts' => Product::get()]);
     }
+
     protected function show($id)
     {
-        return view('products.product', ['product' => $this->find($id), 'list_items' => $this->list_items($id)]);
+        return view('products.product', ['product' => $this->find($id)]);
     }
-    protected function list_items($id) 
+
+    protected function create() 
     {
-        $new_array = [];
-        foreach( self::$all_products as $key => $value) {
-            $id!=$key ? $new_array[$key]=$this->find($key) : false;
-        }
-        return $new_array;
+        return view('products.create');
+    }
+
+    protected function store() 
+    {
+        request()->validate([
+            'title'=> 'required | max:255',
+            'description'=> 'required'
+        ]);
+        $product = new Product();
+        $product->title = request()->title;
+        $product->description = request()->description;
+        $product->save();
+        return redirect('/products');
+    }
+
+    protected function edit($id) 
+    {
+        return view('products.edit', ['product' => $this->find($id)]);
+    }
+
+    protected function update($id) 
+    {
+        request()->validate([
+            'title'=> 'required | max:255',
+            'description'=> 'required'
+        ]);
+        $product = $this->find($id);
+        $product->title = request()->title;
+        $product->description = request()->description;
+        $product->save();
+        return redirect('/products');
+    }
+
+    protected function delete($id) 
+    {
+        $product = $this->find($id);
+        $product->delete();
+        return redirect('/products');
     }
 }

@@ -15,6 +15,11 @@ use App\Http\Controllers\Products;
 */
 
 Route::prefix('/products')->group(function(){
-    Route::get('/', [Products::class, 'index'])->name('test');
+    Route::get('/', [Products::class, 'index']);
+    Route::get('/create', [Products::class, 'create']);
+    Route::post('/store', [Products::class, 'store']);
     Route::get('/{id}', [Products::class, 'show']);
+    Route::get('/{id}/edit', [Products::class, 'edit']);
+    Route::post('/{id}/update', [Products::class, 'update']);
+    Route::get('/{id}/delete', [Products::class, 'delete']);
 });
