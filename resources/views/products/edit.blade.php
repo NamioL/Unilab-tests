@@ -5,6 +5,7 @@
         <h1>Hello from the edit page</h1>
         <form action="/products/{{ $product->id }}/update" method="post">
         @csrf
+        @method('PUT')
         <div>
                 <label for="title">Title</label>
                 <input type="text" id="title" name="title" value="{{ $product->title }}"/>

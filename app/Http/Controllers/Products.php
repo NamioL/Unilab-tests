@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Http\Requests\createProductValidator;
+use Illuminate\Http\Request;
 
 class Products extends Controller
 {
@@ -26,15 +28,15 @@ class Products extends Controller
         return view('products.create');
     }
 
-    protected function store() 
+    protected function store(createProductValidator $request) 
     {
-        request()->validate([
-            'title'=> 'required | max:255',
-            'description'=> 'required'
-        ]);
+        $name = $request->file('upload_img');
+        $path = $request->file('upload_img')->store('/images');
         $product = new Product();
-        $product->title = request()->title;
-        $product->description = request()->description;
+        $product->title = $request['title'];
+        $product->description = $request['description'];
+        $product->image_name = $name;
+        $product->image_path = $path;
         $product->save();
         return redirect('/products');
     }
@@ -44,19 +46,14 @@ class Products extends Controller
         return view('products.edit', ['product' => $this->find($id)]);
     }
 
-    protected function update($id) 
+    protected function update(createProductValidator $request ,$id) 
     {
-        request()->validate([
-            'title'=> 'required | max:255',
-            'description'=> 'required'
-        ]);
         $product = $this->find($id);
-        $product->title = request()->title;
-        $product->description = request()->description;
+        $product->title = $request['title'];
+        $product->description = $request['description'];
         $product->save();
         return redirect('/products');
     }
-
     protected function delete($id) 
     {
         $product = $this->find($id);

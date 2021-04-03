@@ -2,7 +2,7 @@
 
     @section ('content')
         
-        <form action="/products/store" method="post">
+        <form action="/products/store" method="post" enctype="multipart/form-data">
         @csrf
             <div>
                 <label for="title">Title</label>
@@ -18,8 +18,8 @@
                     <p class="valid_error">{{$errors->first('description')}}</p>
                 @enderror
             </div>
-            <!-- <label for="upload_img">upload image</label>
-            <input type="upload" id="upload_img" name="upload_img" /> -->
+            <label for="upload_img">upload image</label>
+            <input type="file" id="upload_img" name="upload_img" />
             <input type="submit" value="Create">
         </form>
 

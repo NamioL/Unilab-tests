@@ -6,7 +6,7 @@
         @foreach ($all_posts as $product)
             <h1><a href="products/{{ $product->id }}"> {{ $product->title }} </a></h1>
             <div class="picture">
-                <img src="{{ $product['image_url'] }}" alt="{{ $product->title}}">
+                <img src="../storage/{{ $product->image_path }}" alt="{{ $product->title}}">
             </div>
             <div class="edit">
                 <a href="products/{{ $product->id }}/edit"> edit product</a>
