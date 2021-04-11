@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Products;
+use App\Http\Controllers\Cards;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,10 @@ use App\Http\Controllers\Products;
 */
 
 Route::prefix('/products')->group(function(){
+    Route::prefix('/cards')->group(function(){
+        Route::get('/', [Cards::class, 'index']);
+        Route::get('{id}/create',[Cards::class, 'create']);
+    });
     Route::get('/', [Products::class, 'index']);
     Route::get('/create', [Products::class, 'create']);
     Route::post('/store', [Products::class, 'store']);
@@ -23,3 +28,8 @@ Route::prefix('/products')->group(function(){
     Route::put('/{id}/update', [Products::class, 'update']);
     Route::get('/{id}/delete', [Products::class, 'delete']);
 });
+
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

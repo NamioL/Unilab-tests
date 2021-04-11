@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+
+    /**
+     * @var mixed
+     */
+    private $description;
+
+    public function user()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
 }
