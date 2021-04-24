@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
 use App\Models\Product;
 use App\Http\Requests\createProductValidator;
 use Illuminate\Http\Request;
@@ -16,12 +17,12 @@ class Products extends Controller
 
     protected function ifUserAuthor($id)
     {
-        return Auth::User()->id==$id;
+        return Auth::id() == $this->find($id)->user_id;
     }
 
     protected function index()
     {
-        return view('products.index', [ 'all_posts' => Product::get()]);
+        return view('products.index', [ 'all_posts' =>  Product::with('card')->get()]);
     }
 
     protected function show($id)
@@ -47,6 +48,7 @@ class Products extends Controller
         $product->title = $request['title'];
         $product->user_id = Auth::User()->id;
         $product->description = $request['description'];
+        $product->price = $request['price'];
         $product->image_name = $name;
         $product->image_path = $path;
         $product->save();
@@ -67,6 +69,7 @@ class Products extends Controller
         $product = $this->find($id);
         $product->title = $request['title'];
         $product->description = $request['description'];
+        $product->price = $request['price'];
         $product->save();
         return redirect('/products');
     }
@@ -76,9 +79,9 @@ class Products extends Controller
         $product = $this->find($id);
         $product->delete();
     }
-    protected function delete($id)
+    public function delete($id)
     {
-        $this->ifUserAuthor($id) ? $this->storeDelete($id) : abort(404);
+        $this->ifUserAuthor($id) ? $this->storeDelete($id) : redirect('/products');
         return redirect('/products');
     }
 }

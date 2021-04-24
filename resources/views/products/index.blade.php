@@ -1,33 +1,36 @@
 @extends ('products.layout')
 
     @section ('content')
-        @auth
-            <h1>{{ \Illuminate\Support\Facades\Auth::User()->name }}</h1>
-            <h2><a href="products/create">Create new product</a></h2>
 
+        <div class="row">
+            @foreach ($all_posts as $product)
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <a href="products/{{ $product->id }}"><img class="card-img-top" src="../storage/{{ $product->image_path }}" alt="{{ $product['title'] }}"></a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="products/{{ $product->id }}">Item One</a>
+                            </h4>
 
-        @endauth
-        @guest
-            <h1>please login in</h1>
-        @endguest
-
-        @foreach ($all_posts as $product)
-            <h1><a href="products/{{ $product->id }}"> {{ $product->title }} </a></h1>
-            <div class="picture">
-                <img src="../storage/{{ $product->image_path }}" alt="{{ $product->title}}">
-            </div>
-            @auth
-                <div class="edit">
-                    <a href="products/{{ $product->id }}/edit"> edit product</a>
+                            <h5>{{ $product->price }} $</h5>
+{{--                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>--}}
+                        </div>
+                        <div class="card-footer">
+                            @auth
+                                <div class="edit btn col-3 bg-dark">
+                                    <a href="products/{{ $product->id }}/edit"> edit</a>
+                                </div>
+                                <div class="delete btn col-3 bg-danger">
+                                    <a href="products/{{ $product->id }}/delete"> delete</a>
+                                </div>
+                                <div class="add-to-the-cart btn col-3 bg-success">
+                                    <a href="products/cards/{{ $product->id }}/create"> add</a>
+                                </div>
+                            @endauth
+                        </div>
+                    </div>
                 </div>
-                <div class="delete">
-                    <a href="products/{{ $product->id }}/delete"> delete product</a>
-                </div>
-                <div class="add-to-the-cart">
-                    <a href="products/{{ $product->id }}/addCard"> add to the card</a>
-                </div>
-            @endauth
-            <hr>
-
         @endforeach
+
+        </div>
     @endsection

@@ -3,8 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Products;
 use App\Http\Controllers\Cards;
+use App\Http\Middleware\UserStatus;
+use App\Http\Controllers\deletedItemData;
 
-/*
+/*s
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -14,8 +16,7 @@ use App\Http\Controllers\Cards;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::prefix('/products')->group(function(){
+Route::middleware('userStatus')->prefix('/products')->group(function(){
     Route::prefix('/cards')->group(function(){
         Route::get('/', [Cards::class, 'index']);
         Route::get('{id}/create',[Cards::class, 'create']);
@@ -27,9 +28,12 @@ Route::prefix('/products')->group(function(){
     Route::get('/{id}/edit', [Products::class, 'edit']);
     Route::put('/{id}/update', [Products::class, 'update']);
     Route::get('/{id}/delete', [Products::class, 'delete']);
+    Route::get('/{id}/delete', [deletedItemData::class, 'saveData']);
 });
-
+Route::view('test', 'main');
+Route::view('/disabled', 'user.user-disabled');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware('userStatus')->get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+

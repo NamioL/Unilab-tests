@@ -6,4 +6,5 @@
                 <img src="{{ $product['image_url'] }}" alt="{{ $product['title'] }}">
             </div>
         </section>
+
     @endsection
